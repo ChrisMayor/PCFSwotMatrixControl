@@ -2,9 +2,9 @@
 
 # Overview
 
-The PCFSwotMatrixControl for Power Platform can be added as a web resource to the Account, Opportunity, or any custom entity form.
+The PCFSwotMatrixControl for Power Platform can be used in Model-driven Apps or Canvas Apps.
 
-The control is a React component and uses Fluent UI.
+The control is built as a React component and uses Fluent UI for the user interface.
 
 The SWOT analysis helps salespeople and organizations identify:
 Strengths (internal)
