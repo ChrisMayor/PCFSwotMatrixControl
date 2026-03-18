@@ -4,4 +4,4 @@
 
 ## Added to Opportunity Form
 
-<img width="1693" height="803" alt="image" src="https://github.com/user-attachments/assets/348b55e1-4b91-4c13-a2b6-a63e14ee6100" />
+<img width="1697" height="786" alt="image" src="https://github.com/user-attachments/assets/9adafadb-2d2e-4bd5-aa96-eeca8c38f057" />
