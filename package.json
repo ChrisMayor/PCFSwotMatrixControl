@@ -13,7 +13,7 @@
     "refreshTypes": "pcf-scripts refreshTypes"
   },
   "dependencies": {
-    "@fluentui/react-components": "9.68.0",
+    "@fluentui/react-components": "9.46.2",
     "@fluentui/react-icons": "^2.0.321",
     "react": "16.14.0",
     "react-dom": "16.14.0"
