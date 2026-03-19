@@ -1,22 +1,15 @@
 import * as React from 'react';
-import { Text, Input, Button, mergeClasses } from '@fluentui/react-components';
-import { AddCircleRegular } from '@fluentui/react-icons';
 import { useStyles } from './SwotMatrixControl.styles';
 import {
   QuadrantKey,
   SwotData,
   ISwotMatrixProps,
-  QUADRANT_CONFIG,
-  parseSwotData,
+  DragState,
   generateId,
 } from './SwotMatrixControl.types';
+import { SwotQuadrant } from './SwotQuadrant';
 
 export type { QuadrantKey, SwotData, ISwotMatrixProps };
-
-type DragState = {
-  itemId: string;
-  fromQuadrant: QuadrantKey;
-} | null;
 
 type NewTextsState = Record<QuadrantKey, string>;
 
@@ -29,14 +22,10 @@ const createEmptyNewTexts = (): NewTextsState => ({
   threats: '',
 });
 
-export const SwotMatrix: React.FC<ISwotMatrixProps> = ({
-  swotData,
-  onDataChanged,
-  disabled,
-}) => {
+export const SwotMatrix: React.FC<ISwotMatrixProps> = ({ swotData, onDataChanged, disabled }) => {
   const styles = useStyles();
 
-  const [data, setData] = React.useState<SwotData>(() => parseSwotData(swotData));
+  const [data, setData] = React.useState<SwotData>(() => SwotData.parse(swotData));
   const [newTexts, setNewTexts] = React.useState<NewTextsState>(createEmptyNewTexts);
   const [dragState, setDragState] = React.useState<DragState>(null);
   const [dragOverQuadrant, setDragOverQuadrant] = React.useState<QuadrantKey | null>(null);
@@ -44,7 +33,7 @@ export const SwotMatrix: React.FC<ISwotMatrixProps> = ({
   const [hoveredItemId, setHoveredItemId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    setData(parseSwotData(swotData));
+    setData(SwotData.parse(swotData));
   }, [swotData]);
 
   const resetDragState = React.useCallback(() => {
@@ -63,14 +52,14 @@ export const SwotMatrix: React.FC<ISwotMatrixProps> = ({
 
   const moveItemBetweenQuadrants = React.useCallback(
     (fromQuadrant: QuadrantKey, toQuadrant: QuadrantKey, itemId: string) => {
-      const item = data[fromQuadrant].find(entry => entry.id === itemId);
+      const item = data[fromQuadrant].find((entry) => entry.id === itemId);
       if (!item) {
         return;
       }
 
       updateData({
         ...data,
-        [fromQuadrant]: data[fromQuadrant].filter(entry => entry.id !== itemId),
+        [fromQuadrant]: data[fromQuadrant].filter((entry) => entry.id !== itemId),
         [toQuadrant]: [...data[toQuadrant], item],
       });
     },
@@ -84,18 +73,18 @@ export const SwotMatrix: React.FC<ISwotMatrixProps> = ({
       draggedItemId: string,
       targetItemId: string,
     ) => {
-      const draggedItem = data[fromQuadrant].find(entry => entry.id === draggedItemId);
+      const draggedItem = data[fromQuadrant].find((entry) => entry.id === draggedItemId);
       if (!draggedItem) {
         return;
       }
 
-      const targetIndex = data[toQuadrant].findIndex(entry => entry.id === targetItemId);
+      const targetIndex = data[toQuadrant].findIndex((entry) => entry.id === targetItemId);
       if (targetIndex === -1) {
         return;
       }
 
       if (fromQuadrant === toQuadrant) {
-        const reorderedItems = data[toQuadrant].filter(entry => entry.id !== draggedItemId);
+        const reorderedItems = data[toQuadrant].filter((entry) => entry.id !== draggedItemId);
         reorderedItems.splice(targetIndex, 0, draggedItem);
 
         updateData({
@@ -111,7 +100,7 @@ export const SwotMatrix: React.FC<ISwotMatrixProps> = ({
 
       updateData({
         ...data,
-        [fromQuadrant]: data[fromQuadrant].filter(entry => entry.id !== draggedItemId),
+        [fromQuadrant]: data[fromQuadrant].filter((entry) => entry.id !== draggedItemId),
         [toQuadrant]: destinationItems,
       });
     },
@@ -183,12 +172,7 @@ export const SwotMatrix: React.FC<ISwotMatrixProps> = ({
         return;
       }
 
-      insertItemBeforeTarget(
-        dragState.fromQuadrant,
-        toQuadrant,
-        dragState.itemId,
-        targetItemId,
-      );
+      insertItemBeforeTarget(dragState.fromQuadrant, toQuadrant, dragState.itemId, targetItemId);
 
       resetDragState();
     },
@@ -211,7 +195,7 @@ export const SwotMatrix: React.FC<ISwotMatrixProps> = ({
         [quadrant]: [...data[quadrant], { id: generateId(), text }],
       });
 
-      setNewTexts(prev => ({
+      setNewTexts((prev) => ({
         ...prev,
         [quadrant]: '',
       }));
@@ -223,130 +207,45 @@ export const SwotMatrix: React.FC<ISwotMatrixProps> = ({
     (quadrant: QuadrantKey, itemId: string) => {
       updateData({
         ...data,
-        [quadrant]: data[quadrant].filter(entry => entry.id !== itemId),
+        [quadrant]: data[quadrant].filter((entry) => entry.id !== itemId),
       });
     },
     [data, updateData],
   );
 
-  const handleInputChange = React.useCallback(
-    (quadrant: QuadrantKey, value: string) => {
-      setNewTexts(prev => ({
-        ...prev,
-        [quadrant]: value,
-      }));
-    },
-    [],
-  );
-
-  const handleInputKeyDown = React.useCallback(
-    (event: React.KeyboardEvent, quadrant: QuadrantKey) => {
-      if (event.key === 'Enter') {
-        handleAdd(quadrant);
-      }
-    },
-    [handleAdd],
-  );
+  const handleInputChange = React.useCallback((quadrant: QuadrantKey, value: string) => {
+    setNewTexts((prev) => ({
+      ...prev,
+      [quadrant]: value,
+    }));
+  }, []);
 
   return (
     <div className={styles.root}>
-      {QUADRANTS.map(quadrant => {
-        const config = QUADRANT_CONFIG[quadrant];
-        const items = data[quadrant];
-        const isDragTarget = dragOverQuadrant === quadrant;
-
-        return (
-          <div
-            key={quadrant}
-            className={styles.quadrant}
-            style={{ backgroundColor: config.bgColor }}
-          >
-            <div
-              className={styles.quadrantHeader}
-              style={{ backgroundColor: config.headerColor }}
-            >
-              <span>{config.label}</span>
-              <span className={styles.headerBadge}>{items.length}</span>
-            </div>
-
-            <div
-              className={mergeClasses(
-                styles.quadrantBody,
-                isDragTarget ? styles.quadrantBodyDragOver : undefined,
-              )}
-              onDragOver={event => handleDragOverQuadrant(event, quadrant)}
-              onDragLeave={handleDragLeaveQuadrant}
-              onDrop={event => handleDropOnQuadrant(event, quadrant)}
-            >
-              {items.map(item => {
-                const isDragging = dragState?.itemId === item.id;
-                const isDraggedOver = dragOverItemId === item.id && dragState?.itemId !== item.id;
-                const isHovered = hoveredItemId === item.id;
-
-                return (
-                  <div
-                    key={item.id}
-                    className={mergeClasses(
-                      styles.item,
-                      isDragging ? styles.itemDragging : undefined,
-                      isDraggedOver ? styles.itemDragOver : undefined,
-                    )}
-                    draggable={!disabled}
-                    onMouseEnter={() => setHoveredItemId(item.id)}
-                    onMouseLeave={() => setHoveredItemId(null)}
-                    onDragStart={event => handleDragStart(event, item.id, quadrant)}
-                    onDragEnd={handleDragEnd}
-                    onDragOver={event => handleDragOverItem(event, item.id)}
-                    onDrop={event => handleDropOnItem(event, item.id, quadrant)}
-                  >
-                    <span className={styles.dragHandle} aria-hidden>
-                      ⠿
-                    </span>
-
-                    <Text className={styles.itemText}>{item.text}</Text>
-
-                    {!disabled && (
-                      <Button
-                        className={styles.removeBtn}
-                        style={{ opacity: isHovered ? 1 : 0 }}
-                        appearance="subtle"
-                        size="small"
-                        aria-label={`Remove ${item.text}`}
-                        onClick={() => handleRemove(quadrant, item.id)}
-                      >
-                        ✕
-                      </Button>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {!disabled && (
-              <div className={styles.addRow}>
-                <Input
-                  className={styles.addInput}
-                  size="small"
-                  placeholder="Add item…"
-                  value={newTexts[quadrant]}
-                  onChange={(_, state) => handleInputChange(quadrant, state.value)}
-                  onKeyDown={event => handleInputKeyDown(event, quadrant)}
-                />
-
-                <Button
-                  className={styles.addBtn}
-                  appearance="transparent"
-                  size="medium"
-                  aria-label={`Add to ${config.label}`}
-                  onClick={() => handleAdd(quadrant)}
-                  style={{ color: config.headerColor }}
-                  icon={<AddCircleRegular className={styles.addBtnIcon} />}
-                />
-              </div>
-            )}
-          </div>
-        );
-      })}
+      {QUADRANTS.map((quadrant) => (
+        <SwotQuadrant
+          key={quadrant}
+          quadrant={quadrant}
+          items={data[quadrant]}
+          disabled={disabled}
+          newText={newTexts[quadrant]}
+          isDragTarget={dragOverQuadrant === quadrant}
+          dragState={dragState}
+          dragOverItemId={dragOverItemId}
+          hoveredItemId={hoveredItemId}
+          onDragOverQuadrant={(event) => handleDragOverQuadrant(event, quadrant)}
+          onDragLeaveQuadrant={handleDragLeaveQuadrant}
+          onDropOnQuadrant={(event) => handleDropOnQuadrant(event, quadrant)}
+          onDragStartItem={(event, itemId) => handleDragStart(event, itemId, quadrant)}
+          onDragEndItem={handleDragEnd}
+          onDragOverItem={handleDragOverItem}
+          onDropOnItem={(event, itemId) => handleDropOnItem(event, itemId, quadrant)}
+          onHoverItem={setHoveredItemId}
+          onNewTextChange={(value) => handleInputChange(quadrant, value)}
+          onAdd={() => handleAdd(quadrant)}
+          onRemoveItem={(itemId) => handleRemove(quadrant, itemId)}
+        />
+      ))}
     </div>
   );
 };

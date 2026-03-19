@@ -104,8 +104,7 @@ export const useStyles = makeStyles({
     transition: 'opacity 0.15s ease',
   },
   itemHovered: {
-    // applied via inline style trick; Griffel doesn't support parent-hover selectors
-    // so we toggle this class via state instead
+    // applied via inline style trick; doesn't support parent-hover selectors
   },
   addRow: {
     display: 'flex',

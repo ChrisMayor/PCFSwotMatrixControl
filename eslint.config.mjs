@@ -2,6 +2,8 @@ import eslintjs from "@eslint/js";
 import microsoftPowerApps from "@microsoft/eslint-plugin-power-apps";
 import pluginPromise from "eslint-plugin-promise";
 import reactPlugin from "eslint-plugin-react";
+import prettier from "eslint-plugin-prettier";
+import eslintConfigPrettier from "eslint-config-prettier";
 import globals from "globals";
 import typescriptEslint from "typescript-eslint";
 
@@ -16,9 +18,11 @@ export default [
   pluginPromise.configs["flat/recommended"],
   microsoftPowerApps.configs.paCheckerHosted,
   reactPlugin.configs.flat.recommended,
+  eslintConfigPrettier,
   {
     plugins: {
       "@microsoft/power-apps": microsoftPowerApps,
+      prettier,
     },
 
     languageOptions: {
@@ -36,6 +40,7 @@ export default [
 
     rules: {
       "@typescript-eslint/no-unused-vars": "off",
+      "prettier/prettier": "warn",
     },
     settings: {
       react: {
