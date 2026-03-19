@@ -39,4 +39,4 @@ Output is saved to a json, sample:
 <img width="1484" height="833" alt="image" src="https://github.com/user-attachments/assets/7267d5a7-88e7-4307-ae4a-c22cd6a3dfc5" />
 
 # Install PCF Control
-Import Managed Solution zip or push with 'pac pcf push --publisher-prefix cme'
+Import [Managed Solution zip](https://github.com/ChrisMayor/PCFSwotMatrixControl/blob/main/PcfSwotMatrixControl_1.1.0.0_Managed.zip) or push with 'push.cmd'
