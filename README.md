@@ -22,7 +22,7 @@ For general usage, see:
 
 In model driven apps, PCFSwotMatrixControl is bound to a multi line text column
 
-Output is saved to a json, sample:
+Outputs a json to a multi line text field:
 
 ````
 {"strengths":[{"id":"mmw8r0w2-bqc6m","text":"Strong technical expertise in modern technologies (Cloud, APIs, microservices, etc.)"},{"id":"mmw8r4s0-3xo3a","text":"Experienced development and architecture team"}],"weaknesses":[{"id":"mmw8rkma-rjpdi","text":"Dependency on a few key specialists"},{"id":"mmw8rvjx-6oxvi","text":"Initial setup and ramp-up time for new project"}],"opportunities":[{"id":"mmw8r8ui-eogxs","text":"Growing demand for digital transformation projects"}],"threats":[{"id":"mmw8rcn0-pztt1","text":"Strong competition from large IT consultancies"},{"id":"mmw8rga9-wwzqa","text":"Security and compliance requirements increasing project complexity"}]}
