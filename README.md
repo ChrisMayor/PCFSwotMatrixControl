@@ -37,3 +37,6 @@ Output is saved to a json, sample:
 ## Added to Canvas App
 
 <img width="1484" height="833" alt="image" src="https://github.com/user-attachments/assets/7267d5a7-88e7-4307-ae4a-c22cd6a3dfc5" />
+
+# Install
+Import Managed Solution zip or push with 'pac pcf push --publisher-prefix cme'
