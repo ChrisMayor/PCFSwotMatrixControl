@@ -34,7 +34,7 @@ Outputs a json to a multi line text field:
 
 <img width="1697" height="786" alt="image" src="https://github.com/user-attachments/assets/9adafadb-2d2e-4bd5-aa96-eeca8c38f057" />
 
-In Action:
+Control in action:
 ![chrome_UsOIIbDLAU](https://github.com/user-attachments/assets/d65619eb-e953-472c-b2ce-3c8f1fef4879)
 
 ## PCFSwotMatrixControl on Canvas App
