@@ -41,5 +41,10 @@ Control in action:
 
 <img width="1484" height="833" alt="image" src="https://github.com/user-attachments/assets/7267d5a7-88e7-4307-ae4a-c22cd6a3dfc5" />
 
+e.g. to make strategic analyses on a tablet:
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/b92d97ca-4a3f-45c2-8559-4d8aae35b7db" />
+
+
 # Install PCF Control
 Import [Managed Solution zip](https://github.com/ChrisMayor/PCFSwotMatrixControl/blob/main/PcfSwotMatrixControl_1.1.0.0_Managed.zip) or push with 'push.cmd'
